@@ -5,12 +5,15 @@ MAINTAINER Dr. Asis Hallab <asis.hallab@gmail.com>
 # update debian package list
 RUN apt-get update
 
-# install R and java
-RUN apt-get install -y r-base openjdk-8-jre openjdk-8-jdk
-
-# install personal packages
-RUN apt-get install -y ssh zsh tmux python-pip virtualenvwrapper curl \
-  locales locate less wget git exuberant-ctags time
+# install packages
+RUN apt-get install -y openjdk-8-jre openjdk-8-jdk \
+  ssh zsh tmux python-pip virtualenvwrapper curl \
+  locales locate less wget git exuberant-ctags time \
+  postgresql postgresql-client
+  
+# install NodeJS version 8
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install -y nodejs
 
 # add Debian sid repo 
 RUN echo 'deb http://deb.debian.org/debian sid main' >>  /etc/apt/sources.list
@@ -29,7 +32,8 @@ RUN sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 RUN dpkg-reconfigure --frontend=noninteractive locales
 RUN update-locale LANG=en_US.UTF-8
 
-# regular user env
+# regular user env:
+# Oh-My-Zsh (ZSH), ctags, tmux-configuration
 RUN su - -c 'sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"'
 RUN su - -c 'wget -O /root/dotfiles.zip https://github.com/asishallab/dotfiles/archive/gene_families.zip'
 RUN su - -c 'unzip /root/dotfiles.zip -d /root/'
@@ -45,6 +49,18 @@ RUN su - -c 'wget -O /tmp/nvim_conf.zip https://github.com/asishallab/neovim_con
 RUN su - -c 'unzip /tmp/nvim_conf.zip -d /tmp'
 RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
 #RUN su - -c 'nvim -c ":PlugInstall | :qa" > /dev/null'
+
+# setup Postgres
+RUN su - postgres -c "createuser kodiaq"
+RUN su - postgres -c "createdb -O kodiaq kodiaq_development"
+RUN su - postgres -c "createdb -O kodiaq kodiaq_test"
+RUN su - postgres -c "createdb -O kodiaq kodiaq_production"
+
+# clone repositories
+RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbBackend.git'
+RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbGui'
+RUN su -c 'git clone https://github.com/ScienceDb/admin_gui_gen'
+RUN su -c 'git clone https://github.com/ScienceDb/express_route_gen_js'
 
 # allow root login
 RUN echo 'root:poiuyt098' | chpasswd
