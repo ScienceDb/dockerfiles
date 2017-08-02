@@ -102,6 +102,6 @@ setopt interactivecomments
 # be used from within Docker):
 umask a+rwx
 
-# R environment:
-export R_LIBS="${HOME}/R_libs"
-export R_LIBS_USER="${HOME}/R_libs"
+# Start postgres on login:
+echo 'Starting postgres on your LOGIN! If not wanted edit ~/.zshrc accordingly.'
+/etc/init.d/postgresql start

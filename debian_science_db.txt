@@ -94,8 +94,6 @@ RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 # run ssh server
 RUN mkdir /var/run/sshd
 EXPOSE 22
-# on container launch start sshd and postgres
-RUN echo '/etc/init.d/postgresql start' >> /root/.zshrc
 CMD /usr/sbin/sshd -D
 
 RUN echo "DONE"
