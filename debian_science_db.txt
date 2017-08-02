@@ -1,0 +1,102 @@
+FROM debian:stretch
+
+MAINTAINER Dr. Asis Hallab <asis.hallab@gmail.com>
+
+# Add Debian sid repo and update
+RUN echo 'deb http://deb.debian.org/debian sid main' >>  /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get clean
+
+# install packages
+RUN apt-get install -y openjdk-8-jre openjdk-8-jdk \
+  ssh zsh tmux python-pip virtualenvwrapper curl \
+  locales locate less wget git exuberant-ctags time \
+  postgresql postgresql-client unzip
+RUN apt-get install -y neovim/unstable
+  
+# install NodeJS version 8
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install -y nodejs
+# Using SSL for NPM package management sometimes causes problems from within
+# the container, so use plain http instead of https.
+RUN su - -c 'npm config set registry http://registry.npmjs.org/'
+# NPM needs IP forwarding
+RUN su - -c 'sed -i "/^#net.ipv4.ip_forward=1/ s/^#//" /etc/sysctl.conf'
+RUN su - -c 'sed -i "/^#net.ipv6.conf.all.forwarding=1/ s/^#//" /etc/sysctl.conf'
+
+# For compilation of e.g. blat the MACHTYPE is needed
+ENV MACHTYPE x86_64
+
+# install and configure locales
+RUN apt-get install -y locales
+RUN sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    echo 'LANG="en_US.UTF-8"'>/etc/default/locale
+
+RUN dpkg-reconfigure --frontend=noninteractive locales
+RUN update-locale LANG=en_US.UTF-8
+
+# Update system
+RUN apt-get update
+RUN apt-get dist-upgrade -y
+
+# regular user env:
+# Oh-My-Zsh (ZSH), ctags, tmux-configuration
+RUN su - -c 'sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"'
+RUN su - -c 'wget -O /root/dotfiles.zip https://github.com/asishallab/dotfiles/archive/gene_families.zip'
+RUN su - -c 'unzip /root/dotfiles.zip -d /root/'
+RUN su - -c 'ln -fs /root/dotfiles-gene_families/.zshrc /root'
+RUN su - -c 'ln -fs /root/dotfiles-gene_families/.tmux.conf /root'
+RUN su - -c 'ln -fs /root/dotfiles-gene_families/.ctags /root'
+
+# we love neovim
+RUN su - -c 'source /usr/share/virtualenvwrapper/virtualenvwrapper.sh && mkvirtualenv neovim && pip install neovim'
+RUN su - -c 'mkdir -p /root/.nvim/tmp/backup'
+RUN su - -c 'mkdir -p /root/.config'
+RUN su - -c 'wget -O /tmp/nvim_conf.zip https://github.com/asishallab/neovim_config/archive/master.zip'
+RUN su - -c 'unzip /tmp/nvim_conf.zip -d /tmp'
+RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
+#RUN su - -c 'nvim -c ":PlugInstall | :qa" > /dev/null'
+
+# Setup projects:
+RUN mkdir /root/projects
+RUN su - -c 'git clone https://github.com/ScienceDb/ScienceDbBackend.git /root/projects/ScienceDbBackend'
+# RUN su - -c 'cd /root/projects/ScienceDbBackend && npm install --save'
+RUN su - -c 'git clone https://github.com/ScienceDb/ScienceDbGui.git /root/projects/ScienceDbGui'
+# RUN su - -c 'cd /root/projects/ScienceDbGui && npm install --save'
+RUN su - -c 'git clone https://github.com/ScienceDb/admin_gui_gen.git /root/projects/admin_gui_gen'
+# RUN su - -c 'cd /root/projects/admin_gui_gen && npm install --save && npm install -g .'
+RUN su - -c 'git clone https://github.com/ScienceDb/express_route_gen_js.git /root/projects/express_route_gen_js'
+# RUN su - -c 'cd /root/projects/express_route_gen_js && npm install --save && npm install -g .'
+
+# The following block as user postgres
+USER postgres
+
+# Setup postgresql user and databases
+RUN    /etc/init.d/postgresql start &&\
+  psql -c "CREATE USER kodiaq WITH SUPERUSER PASSWORD 'kodiaq'" &&\
+  createdb -O kodiaq kodiaq_development &&\
+  createdb -O kodiaq kodiaq_test &&\
+  createdb -O kodiaq kodiaq_production
+
+# Adjust PostgreSQL configuration so that remote connections to the
+# database are possible.
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
+
+# And add listen_addresses to /etc/postgresql/9.6/main/postgresql.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
+
+# Switch back to root
+USER root
+
+# allow root login
+RUN echo 'root:poiuyt098' | chpasswd
+RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+
+# run ssh server
+RUN mkdir /var/run/sshd
+EXPOSE 22
+# on container launch start sshd and postgres
+RUN echo '/etc/init.d/postgresql start' >> /root/.zshrc
+CMD /usr/sbin/sshd -D
+
+RUN echo "DONE"

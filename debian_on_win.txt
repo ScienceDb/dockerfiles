@@ -2,24 +2,21 @@ FROM debian:stretch
 
 MAINTAINER Dr. Asis Hallab <asis.hallab@gmail.com>
 
-# update debian package list
+# Add Debian sid repo and update
+RUN echo 'deb http://deb.debian.org/debian sid main' >>  /etc/apt/sources.list
 RUN apt-get update
+RUN apt-get clean
 
 # install packages
 RUN apt-get install -y openjdk-8-jre openjdk-8-jdk \
   ssh zsh tmux python-pip virtualenvwrapper curl \
   locales locate less wget git exuberant-ctags time \
-  postgresql postgresql-client
+  postgresql postgresql-client unzip
+RUN apt-get install -y neovim/unstable
   
 # install NodeJS version 8
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
-
-# add Debian sid repo 
-RUN echo 'deb http://deb.debian.org/debian sid main' >>  /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get install -y neovim/unstable
-RUN apt-get clean
 
 # For compilation of e.g. blat the MACHTYPE is needed
 ENV MACHTYPE x86_64
@@ -51,16 +48,23 @@ RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
 #RUN su - -c 'nvim -c ":PlugInstall | :qa" > /dev/null'
 
 # setup Postgres
-RUN su - postgres -c "createuser kodiaq"
-RUN su - postgres -c "createdb -O kodiaq kodiaq_development"
-RUN su - postgres -c "createdb -O kodiaq kodiaq_test"
-RUN su - postgres -c "createdb -O kodiaq kodiaq_production"
+RUN mkdir /var/run/postgresql/9.6-main.pg_stat_tmp
+RUN chown -R postgres:postgres /var/run/postgresql/9.6-main.pg_stat_tmp
+
+# Adjust PostgreSQL configuration so that remote connections to the
+# database are possible.
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
+# And add ``listen_addresses`` to ``/etc/postgresql/9.6/main/postgresql.conf``
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
+
+RUN echo "su - postgres -c 'nohup /usr/lib/postgresql/9.6/bin/postgres -D /var/lib/postgresql/9.6/main/ --config_file=/etc/postgresql/9.6/main/postgresql.conf > /var/run/postgresql/9.6-main.pg_stat_tmp/postgres.log 2>&1 &'" > /opt/start_postgres.sh
+RUN sh /opt/start_postgres.sh && sleep 5 && su - postgres -c 'createuser kodiaq && createdb -O kodiaq kodiaq_development && createdb -O kodiaq kodiaq_test && createdb -O kodiaq kodiaq_production'
 
 # clone repositories
-RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbBackend.git'
-RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbGui'
-RUN su -c 'git clone https://github.com/ScienceDb/admin_gui_gen'
-RUN su -c 'git clone https://github.com/ScienceDb/express_route_gen_js'
+# RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbBackend.git'
+# RUN su -c 'git clone https://github.com/ScienceDb/ScienceDbGui'
+# RUN su -c 'git clone https://github.com/ScienceDb/admin_gui_gen'
+# RUN su -c 'git clone https://github.com/ScienceDb/express_route_gen_js'
 
 # allow root login
 RUN echo 'root:poiuyt098' | chpasswd
@@ -69,6 +73,7 @@ RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 # run ssh server
 RUN mkdir /var/run/sshd
 EXPOSE 22
-CMD /usr/sbin/sshd -D
+# on container launch start sshd and postgres
+CMD sh /opt/start_postgres.sh; /usr/sbin/sshd -D
 
 RUN echo "DONE"
