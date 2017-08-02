@@ -42,11 +42,10 @@ RUN apt-get dist-upgrade -y
 # regular user env:
 # Oh-My-Zsh (ZSH), ctags, tmux-configuration
 RUN su - -c 'sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"'
-RUN su - -c 'wget -O /root/dotfiles.zip https://github.com/asishallab/dotfiles/archive/gene_families.zip'
-RUN su - -c 'unzip /root/dotfiles.zip -d /root/'
-RUN su - -c 'ln -fs /root/dotfiles-gene_families/.zshrc /root'
-RUN su - -c 'ln -fs /root/dotfiles-gene_families/.tmux.conf /root'
-RUN su - -c 'ln -fs /root/dotfiles-gene_families/.ctags /root'
+RUN su - -c 'git clone https://github.com/ScienceDb/dotfiles.git /root/dotfiles'
+RUN su - -c 'ln -fs /root/dotfiles/.zshrc /root'
+RUN su - -c 'ln -fs /root/dotfiles/.tmux.conf /root'
+RUN su - -c 'ln -fs /root/dotfiles/.ctags /root'
 
 # we love neovim
 RUN su - -c 'source /usr/share/virtualenvwrapper/virtualenvwrapper.sh && mkvirtualenv neovim && pip install neovim'
