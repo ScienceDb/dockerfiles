@@ -1,10 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export RMANHOME=/opt/rasdaman
-export PATH=/opt/rasdaman/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/LUSTRE/Genetica/ahallab/.oh-my-zsh
+export ZSH=${HOME}/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -87,30 +85,23 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Python virtualenv and virtualenvwrapper:
-#source /usr/bin/virtualenvwrapper.sh
-
-# NPM Packages
-NPM_PACKAGES="${HOME}/.npm-packages"
-export NODE_PATH=$NPM_PACKAGES
-PATH="$NPM_PACKAGES/bin:$PATH"
-# Unset manpath so we can inherit from /etc/manpath via the `manpath` command
-export MANPATH="$NPM_PACKAGES/share/man:$(manpath):$MANPATH"
+source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
 
 # History
 HISTSIZE=1000000
 SAVEHIST=1000000
 
 alias l='ls -lah'
-#alias nvim='workon neovim && nvim'
+alias nvim='workon neovim && nvim'
+alias vi='nvim -u NONE'
+alias vim='nvim -u NONE'
 alias h='history | grep '
 setopt interactivecomments
-# All other users should be able to access the directories I create:
-# umask 0022
+# All users should have complete access to files and directories I create (to
+# be used from within Docker):
+umask a+rwx
 
 # R environment:
-export R_LIBS="/home/hallab/R_libs"
-export R_LIBS_USER="/home/hallab/R_libs"
-
-# Scala
-export SCALA_HOME="/opt/scala-2.12.1/"
-export PATH="$SCALA_HOME/bin:$PATH"
+export R_LIBS="${HOME}/R_libs"
+export R_LIBS_USER="${HOME}/R_libs"
