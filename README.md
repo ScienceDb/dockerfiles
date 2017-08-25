@@ -2,6 +2,8 @@
 
 This project holds a Docker container setup used as development environment, and also as a source for production / deployment environment. It enables distributed developer of "ScienceDb" to have a well defined environment.
 
+A presentation of ScienceDb can be found [here](https://github.com/ScienceDb/dotfiles/blob/master/ScienceDb.pdf).
+
 ## Structure
 
 Science Db is a collection of four NodeJS projects providing an easy to setup, extend, and maintain knowledge management system for science. It is greatly influenced by e.g. [RailsAdmin](https://github.com/sferik/rails_admin) or [Django](https://www.djangoproject.com/). It follows the philosophy of code generation to define and migrate data models. Access to these is provided through a backend in the form of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) web services, and an _optional_ Graphical User Interface (GUI) in the form of a single page web application (SPA). Both interfaces provide the standard Create, Read, Update, and Delete ([CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)) use cases.
