@@ -49,6 +49,9 @@ To add the GUI for a new data model use the [frontend code generator](https://gi
 
 #### ScienceDb Frontend Code generator
 
-The [frontend code generator admin_gui_gen](https://github.com/ScienceDb/admin_gui_gen) is a subproject of ScienceDb. 
-
+The [frontend code generator admin_gui_gen](https://github.com/ScienceDb/admin_gui_gen) is a subproject of ScienceDb. For example to generate the GUI components for a new data model `plant` issue
+````
+admin_gui_gen --baseUrl 'www.scienceDb.org' --name Plant --attributes 'title:string, taxon:string, gmo:boolean'
+````
+_Note_, that the `baseUrl` points to your backend server.
 
