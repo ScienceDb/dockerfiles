@@ -78,16 +78,16 @@ This usage of a development docker container enables distributed programmers to 
 ### Start the Developmental Docker Container
  Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
 ````
- docker run --rm -d -p PortSelectedByUser:22 debian:scienceDb
+ docker run --rm -d -p 2939:22 debian:scienceDb
 ````
 
-(_Note_: _PortSelectedByUser_ - represents the number of free/available port in OS
+(_Note_: `2939` - represents the number of free/available port in OS
 can be freely selected by the user/developer.)
 
 #### SSH into the development container
- Enable SSH connection to the docker container:
+ Enable SSH connection to the docker container (use `poiuyt098` as a password for SSH connection):
 ````
- ssh root@localhost
+ ssh root@localhost -p 2939
 ````
 
  _Notes_ for Windows users: 
