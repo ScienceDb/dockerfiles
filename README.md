@@ -55,3 +55,20 @@ admin_gui_gen --baseUrl 'www.scienceDb.org' --name Plant --attributes 'title:str
 ````
 _Note_, that the `baseUrl` points to your backend server.
 
+## Developmental work cycle
+
+The basic idea is to build the development [Docker](https://www.docker.com/)-Image, start it as a [daemon](https://en.wikipedia.org/wiki/Daemon_(computing)), and connect to it using [SSH](https://en.wikipedia.org/wiki/Secure_Shell). Within the Docker image the four above sub-projects are already checked out [(git)](https://git-scm.com/) and can be started.
+
+This usage of a development docker container enables distributed programmers to share a unified well defined development platform.
+
+## Installation / Developmental Usage
+
+### Setup the Developmental Docker Image
+
+ download the Dockerfile [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt)
+
+### Start the Developmental Docker Container
+
+### Start the skeleton applications
+
+### Run the ScienceDb Frontend (SPA GUI) 
