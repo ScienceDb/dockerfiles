@@ -98,8 +98,11 @@ can be freely selected by the user/developer.)
 ### Start the ScienceDb Backend
  Open ~/projects/ScienceDbBackend using SSH session and run:
 ````
- npm start
+ PORT=3000 npm start
 ````
+_Note_, that `3000` is an arbitrary port. You can specify a different one, but in that case need to adjust the frontend...
+
+
 ### Run the ScienceDb Frontend (SPA GUI) 
  Open ~/projects/ScienceDbGui and run:
 ````
