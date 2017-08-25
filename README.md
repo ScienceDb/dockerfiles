@@ -1,2 +1,108 @@
 # dotfiles
-My personal *nix system configuration
+
+This project holds a Docker container setup used as development environment, and also as a source for production / deployment environment. It enables distributed developer of "ScienceDb" to have a well defined environment.
+
+A presentation of ScienceDb can be found [here](https://github.com/ScienceDb/dotfiles/blob/master/ScienceDb.pdf).
+
+## Structure
+
+Science Db is a collection of four NodeJS projects providing an easy to setup, extend, and maintain knowledge management system for science. It is greatly influenced by e.g. [RailsAdmin](https://github.com/sferik/rails_admin) or [Django](https://www.djangoproject.com/). It follows the philosophy of code generation to define and migrate data models. Access to these is provided through a backend in the form of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) web services, and an _optional_ Graphical User Interface (GUI) in the form of a single page web application (SPA). Both interfaces provide the standard Create, Read, Update, and Delete ([CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)) use cases.
+
+### Philosphy / Frameworks
+
+The project was inspired by [this](http://mherman.org/blog/2015/10/22/node-postgres-sequelize/#.WZ_Iq9hCRaR) blog post. We use the renowned Model-View-Controller ([MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)) architecture.
+
+#### Backend
+
+We use [Express](https://expressjs.com/) and [Sequelize](http://docs.sequelizejs.com/) for the backend.
+
+#### Frontend
+
+We use [VueJS v2](https://vuejs.org/) for the frontend.
+
+### Sub-Projects
+
+There are two skeleton projects and two code generator projects forming ScienceDb.
+
+#### ScienceDbBackend
+
+A default Backend providing User, Roles, Authentication and Authorization, _optional_ support for multipe [relational databases](https://en.wikipedia.org/wiki/Relational_database), and a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) is [ScienceDbBackend](https://github.com/ScienceDb/ScienceDbBackend).
+
+#### ScienceDbBackend code generators
+
+##### Model and Migration 
+
+Model and migration files are created using Sequelize command line interface. For example to create a new model `plant` use 
+
+````
+sequelize model:create --name Plant --attributes 'title:string, taxon:string, gmo:boolean'
+
+````
+
+##### Controller
+
+To generate controller files, use our code generator project [express_route_gen_js](https://github.com/ScienceDb/express_route_gen_js)
+
+#### Frontend
+
+A skeleton frontend single page web application (SPA) using [VueJs v2](https://vuejs.org/) and [vuetable-2](https://github.com/ratiw/vuetable-2) is provided as [ScienceDbGui](https://github.com/ScienceDb/ScienceDbGui). 
+
+To add the GUI for a new data model use the [frontend code generator](https://github.com/ScienceDb/admin_gui_gen).
+
+#### ScienceDb Frontend Code generator
+
+The [frontend code generator admin_gui_gen](https://github.com/ScienceDb/admin_gui_gen) is a subproject of ScienceDb. For example to generate the GUI components for a new data model `plant` issue
+````
+admin_gui_gen --baseUrl 'www.scienceDb.org' --name Plant --attributes 'title:string, taxon:string, gmo:boolean'
+````
+_Note_, that the `baseUrl` points to your backend server.
+
+## Developmental work cycle
+
+The basic idea is to build the development [Docker](https://www.docker.com/)-Image, start it as a [daemon](https://en.wikipedia.org/wiki/Daemon_(computing)), and connect to it using [SSH](https://en.wikipedia.org/wiki/Secure_Shell). Within the Docker image the four above sub-projects are already checked out [(git)](https://git-scm.com/) and can be started.
+
+This usage of a development docker container enables distributed programmers to share a unified well defined development platform.
+
+## Installation / Developmental Usage
+
+### Setup the Developmental Docker Image
+
+ 1. Download the Dockerfile [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt)
+ 2. Open the folder with Dockerfile downloaded in the Terminal/Cmd;
+ 3. Run the build of the image:
+ ````
+  docker build -f 'NameOfDockerfileSaved' -t debian:scienceDb .
+ ````
+ (where: _NameOfDockerfileSaved_ can be freely selected by the user/developer.)
+
+### Start the Developmental Docker Container
+ Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
+````
+ docker run --rm -d -p PortSelectedByUser:22 debian:scienceDb
+````
+
+(_Note_: _PortSelectedByUser_ - represents the number of free/available port in OS
+can be freely selected by the user/developer.)
+
+#### SSH into the development container
+ Enable SSH connection to the docker container:
+````
+ ssh root@localhost
+````
+
+ _Notes_ for Windows users: 
+   * you can use any windows app that provides the possibility to make a ssh connection to the server;
+   * [Linux Bash Shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/);
+   * or [cygwin](https://www.cygwin.com/) ).
+
+### Start the ScienceDb Backend
+ Open ~/projects/ScienceDbBackend using SSH session and run:
+````
+ npm start
+````
+### Run the ScienceDb Frontend (SPA GUI) 
+ Open ~/projects/ScienceDbGui and run:
+````
+ npm dev env NODE_ENV=PORT_NUMBER
+````
+ (_Note_: instead of PORT_NUMBER specify any number you wish)

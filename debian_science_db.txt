@@ -60,6 +60,7 @@ RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
 RUN mkdir /root/projects
 RUN su - -c 'git clone https://github.com/ScienceDb/ScienceDbBackend.git /root/projects/ScienceDbBackend'
 RUN su - -c 'cd /root/projects/ScienceDbBackend && npm install --save'
+RUN su - -c 'cd /root/projects/ScienceDbBackend && node_modules/.bin/sequelize db:migrate'
 RUN su - -c 'cd /root/projects/ScienceDbBackend && node_modules/.bin/sequelize db:seed:all'
 RUN su - -c 'git clone https://github.com/ScienceDb/ScienceDbGui.git /root/projects/ScienceDbGui'
 RUN su - -c 'cd /root/projects/ScienceDbGui && npm install --save'
