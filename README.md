@@ -103,6 +103,6 @@ can be freely selected by the user/developer.)
 ### Run the ScienceDb Frontend (SPA GUI) 
  Open ~/projects/ScienceDbGui and run:
 ````
- npm dev env NODE_ENV=PORT_NUMBER
+ PORT=PORT_NUMBER npm run dev
 ````
  (_Note_: instead of PORT_NUMBER specify any number you wish)
