@@ -67,10 +67,42 @@ This usage of a development docker container enables distributed programmers to 
 
 ### Setup the Developmental Docker Image
 
- download the Dockerfile [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt)
+ 1. Download the Dockerfile [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt)
+ 2. Open the folder with Dockerfile downloaded in the Terminal/Cmd;
+ 3. Run the build of the image:
+ ````
+  docker build -f 'NameOfDockerfileSaved' -t debian:scienceDb .
+ ````
+ (where: _NameOfDockerfileSaved_ can be freely selected by the user/developer.)
 
 ### Start the Developmental Docker Container
+ Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
+````
+ docker run --rm -d -p PortSelectedByUser:22 debian:scienceDb
+````
 
-### Start the skeleton applications
+(_Note_: _PortSelectedByUser_ - represents the number of free/available port in OS
+can be freely selected by the user/developer.)
 
+#### SSH into the development container
+ Enable SSH connection to the docker container:
+````
+ ssh root@localhost
+````
+
+ _Notes_ for Windows users: 
+   * you can use any windows app that provides the possibility to make a ssh connection to the server;
+   * [Linux Bash Shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/);
+   * or [cygwin](https://www.cygwin.com/) ).
+
+### Start the ScienceDb Backend
+ Open ~/projects/ScienceDbBackend using SSH session and run:
+````
+ npm start
+````
 ### Run the ScienceDb Frontend (SPA GUI) 
+ Open ~/projects/ScienceDbGui and run:
+````
+ npm dev env NODE_ENV=PORT_NUMBER
+````
+ (_Note_: instead of PORT_NUMBER specify any number you wish)
