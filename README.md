@@ -78,8 +78,9 @@ This usage of a development docker container enables distributed programmers to 
 ### Start the Developmental Docker Container
  Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
 ````
- docker run --rm -d -p 2939:22 debian:scienceDb
+ docker run --rm -d -p 2939:22 -p PORT_NUMBER:PORT_NUMBER debian:scienceDb
 ````
+(_Note_: instead of PORT_NUMBER specify any number you wish, but do not use 2939)
 
 (_Note_: `2939` - represents the number of free/available port in OS
 can be freely selected by the user/developer.)
@@ -108,4 +109,4 @@ _Note_, that `3000` is an arbitrary port. You can specify a different one, but i
 ````
  PORT=PORT_NUMBER npm run dev
 ````
- (_Note_: instead of PORT_NUMBER specify any number you wish)
+ (_Note_: instead of PORT_NUMBER specify the number that is in accordance with the number selected for Developmental Docker Container)
