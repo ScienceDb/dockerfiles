@@ -110,3 +110,15 @@ _Note_, that `3000` is an arbitrary port. You can specify a different one, but i
  PORT=PORT_NUMBER npm run dev
 ````
  (_Note_: instead of PORT_NUMBER specify the number that is in accordance with the number selected for Developmental Docker Container)
+
+ ### Setup projects (optional)
+ In order to get the default project configuration you can do the following:
+
+````
+ cd /
+ ./setup_projects
+````
+_Note_: after successful setup you can remove setup_projects file:
+````
+  rm setup_projects
+````

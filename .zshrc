@@ -101,7 +101,3 @@ setopt interactivecomments
 # All users should have complete access to files and directories I create (to
 # be used from within Docker):
 umask a+rwx
-
-# Start postgres on login:
-echo 'Starting postgres on your LOGIN! If not wanted edit ~/.zshrc accordingly.'
-/etc/init.d/postgresql start
