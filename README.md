@@ -78,9 +78,11 @@ This usage of a development docker container enables distributed programmers to 
 ### Start the Developmental Docker Container
  Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
 ````
- docker run --rm -d -p 2939:22 -p PORT_NUMBER:PORT_NUMBER debian:scienceDb
+ docker run --rm -d -p 2939:22 -p PORT_NUMBER:PORT_NUMBER debian:scienceDb -v PATH_TO_FOLDER_ON_HOST:/root/projects
 ````
-(_Note_: instead of PORT_NUMBER specify any number you wish, but do not use 2939)
+(_Note_: 
+        * instead of PORT_NUMBER specify any number you wish, but do not use 2939;
+        * PATH_TO_FOLDER_ON_HOST - In order to have the possibility to edit the code within the projects you can select any folder on your computer (host OS)
 
 (_Note_: `2939` - represents the number of free/available port in OS
 can be freely selected by the user/developer.)
@@ -96,6 +98,13 @@ can be freely selected by the user/developer.)
    * [Linux Bash Shell](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/);
    * or [cygwin](https://www.cygwin.com/) ).
 
+#### Setup projects
+ Checkout projects with git and run initial setup. Within the above SSH session, execute
+
+````
+ sh /root/setup_projects
+````
+
 ### Start the ScienceDb Backend
  Open ~/projects/ScienceDbBackend using SSH session and run:
 ````
@@ -110,15 +119,3 @@ _Note_, that `3000` is an arbitrary port. You can specify a different one, but i
  PORT=PORT_NUMBER npm run dev
 ````
  (_Note_: instead of PORT_NUMBER specify the number that is in accordance with the number selected for Developmental Docker Container)
-
- ### Setup projects (optional)
- In order to get the default project configuration you can do the following:
-
-````
- cd /
- ./setup_projects
-````
-_Note_: after successful setup you can remove setup_projects file:
-````
-  rm setup_projects
-````
