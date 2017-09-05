@@ -11,7 +11,7 @@ RUN apt-get clean
 RUN apt-get install -y openjdk-8-jre openjdk-8-jdk \
   ssh zsh tmux python-pip virtualenvwrapper curl \
   locales locate less wget git exuberant-ctags time \
-  postgresql postgresql-client unzip
+  postgresql-client unzip
 RUN apt-get install -y neovim/unstable
   
 # install NodeJS version 8
@@ -55,26 +55,6 @@ RUN su - -c 'wget -O /tmp/nvim_conf.zip https://github.com/asishallab/neovim_con
 RUN su - -c 'unzip /tmp/nvim_conf.zip -d /tmp'
 RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
 #RUN su - -c 'nvim -c ":PlugInstall | :qa" > /dev/null'
-
-# The following block as user postgres
-USER postgres
-
-# Setup postgresql user and databases
-RUN    /etc/init.d/postgresql start &&\
-  psql -c "CREATE USER kodiaq WITH SUPERUSER PASSWORD 'kodiaq'" &&\
-  createdb -O kodiaq kodiaq_development &&\
-  createdb -O kodiaq kodiaq_test &&\
-  createdb -O kodiaq kodiaq_production
-
-# Adjust PostgreSQL configuration so that remote connections to the
-# database are possible.
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
-
-# And add listen_addresses to /etc/postgresql/9.6/main/postgresql.conf
-RUN echo "listen_addresses='*'" >> /etc/postgresql/9.6/main/postgresql.conf
-
-# Switch back to root
-USER root
 
 # Setup projects:
 RUN wget https://raw.githubusercontent.com/ScienceDb/dotfiles/master/setup_projects

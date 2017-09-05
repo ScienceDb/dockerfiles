@@ -65,27 +65,14 @@ This usage of a development docker container enables distributed programmers to 
 
 ## Installation / Developmental Usage
 
-### Setup the Developmental Docker Image
+### Setup the Developmental Docker Images
 
- 1. Download the Dockerfile [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt)
- 2. Open the folder with Dockerfile downloaded in the Terminal/Cmd;
- 3. Run the build of the image:
+ 1. Download the shell script [initUserDb.sh](https://github.com/ScienceDb/dotfiles/blob/master/initUserDb.sh), docker-compose file [docker-compose.yml](https://github.com/ScienceDb/dotfiles/blob/master/docker-compose.yml), Dockerfiles [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt) and [postgres_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/postgres_db.txt)
+ 2. Open the folder with files downloaded in the Terminal/Cmd;
+ 3. start up your application by running:
  ````
-  docker build -f 'NameOfDockerfileSaved' -t debian:scienceDb .
+  docker-compose up
  ````
- (where: _NameOfDockerfileSaved_ can be freely selected by the user/developer.)
-
-### Start the Developmental Docker Container
- Run selected docker container and publish a container’s port(s) (see PortSelectedByUser):
-````
- docker run --rm -d -p 2939:22 -p PORT_NUMBER:PORT_NUMBER debian:scienceDb -v PATH_TO_FOLDER_ON_HOST:/root/projects
-````
-(_Note_: 
-        * instead of PORT_NUMBER specify any number you wish, but do not use 2939;
-        * PATH_TO_FOLDER_ON_HOST - In order to have the possibility to edit the code within the projects you can select any folder on your computer (host OS)
-
-(_Note_: `2939` - represents the number of free/available port in OS
-can be freely selected by the user/developer.)
 
 #### SSH into the development container
  Enable SSH connection to the docker container (use `poiuyt098` as a password for SSH connection):
@@ -116,6 +103,5 @@ _Note_, that `3000` is an arbitrary port. You can specify a different one, but i
 ### Run the ScienceDb Frontend (SPA GUI) 
  Open ~/projects/ScienceDbGui and run:
 ````
- PORT=PORT_NUMBER npm run dev
+ PORT=3333 npm run dev
 ````
- (_Note_: instead of PORT_NUMBER specify the number that is in accordance with the number selected for Developmental Docker Container)
