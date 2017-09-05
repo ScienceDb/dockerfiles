@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: postgres_db.txt
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
 
 volumes:
   data: {}
