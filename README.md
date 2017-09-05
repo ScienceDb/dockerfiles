@@ -67,8 +67,9 @@ This usage of a development docker container enables distributed programmers to 
 
 ### Setup the Developmental Docker Images
 
- 1. Download the shell script [initUserDb.sh](https://github.com/ScienceDb/dotfiles/blob/master/initUserDb.sh), docker-compose file [docker-compose.yml](https://github.com/ScienceDb/dotfiles/blob/master/docker-compose.yml), Dockerfiles [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt) and [postgres_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/postgres_db.txt)
+ 1. Download the shell script [initUserDb.sh](https://github.com/ScienceDb/dotfiles/blob/master/initUserDb.sh), docker-compose file [docker-compose.yml](https://github.com/ScienceDb/dotfiles/blob/master/docker-compose.yml), Dockerfiles [debian_science_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/debian_science_db.txt) and [postgres_db.txt](https://github.com/ScienceDb/dotfiles/blob/master/postgres_db.txt)  
  2. Open the folder with files downloaded in the Terminal/Cmd;
+ _Note_ In order to have the possibility to edit the code within the projects you can download/save projects in the folder where all previous files were downloaded
  3. start up your application by running:
  ````
   docker-compose up
