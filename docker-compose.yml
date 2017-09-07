@@ -10,7 +10,6 @@ services:
     ports:
       - "2939:22"
       - "3333:3333"
-<<<<<<< HEAD
       - "3000:3000"
     volumes:
       - ..:/root/projects
