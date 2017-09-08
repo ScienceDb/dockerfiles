@@ -1,0 +1,20 @@
+I
+am
+POST s HTTP/1.1
+Content-Type: application/soap+xml
+${header name}: ${header value}
+
+<soap:Envelope
+    xmlns:soap="http://www.w3.org/2001/12/soap-envelope"
+    soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding">
+    <soap:Body>
+        content
+    </soap:Body>
+</soap:Envelope>
+
+skldjghsjklgh
+sdkljghrghreupi\
+
+sdwre;l\
+
+OSS
