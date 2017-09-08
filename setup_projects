@@ -2,9 +2,7 @@
 git clone https://github.com/ScienceDb/ScienceDbBackend.git /root/projects/ScienceDbBackend
 cd /root/projects/ScienceDbBackend
 npm install --save
-cd /root/projects/ScienceDbBackend
 node_modules/.bin/sequelize db:migrate
-cd /root/projects/ScienceDbBackend
 node_modules/.bin/sequelize db:seed:all
 git clone https://github.com/ScienceDb/ScienceDbGui.git /root/projects/ScienceDbGui
 cd /root/projects/ScienceDbGui
