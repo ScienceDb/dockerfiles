@@ -55,7 +55,7 @@ RUN su - -c 'wget -O /tmp/nvim_conf.zip https://github.com/asishallab/neovim_con
 RUN su - -c 'unzip /tmp/nvim_conf.zip -d /tmp'
 RUN su - -c 'cp -r /tmp/neovim_config-master /root/.config/nvim'
 #RUN su - -c 'nvim -c ":PlugInstall | :qa" > /dev/null'
-RUN SU - -c 'npm install -g js-beautify'
+RUN su - -c 'npm install -g js-beautify'
 
 # Setup projects:
 RUN wget https://raw.githubusercontent.com/ScienceDb/dotfiles/master/setup_projects
