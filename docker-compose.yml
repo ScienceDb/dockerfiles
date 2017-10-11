@@ -4,7 +4,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: debian_science_db.txt
+      dockerfile: alpine_science_db.txt
+    working_dir: /home/node/app
     links:
       - postgres
     ports:
@@ -12,7 +13,7 @@ services:
       - "3333:3333"
       - "3000:3000"
     volumes:
-      - ..:/root/projects
+      - ..:/home/node/app
 
   postgres:
     build:
@@ -20,6 +21,8 @@ services:
       dockerfile: postgres_db.txt
     volumes:
       - data:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
 
 volumes:
   data: {}
