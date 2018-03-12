@@ -1,0 +1,25 @@
+version: "3.2"
+
+services:
+  postgraphql:
+    image: postgraphql/postgraphql:latest
+    ports:
+      - "5000:5000"
+    environment:
+      PGUSER: science_db
+      PGPASSWORD: science_db
+      PGHOST: science_db_psql_db
+      PGDATABASE: science_db_development
+      PGPORT: 5432
+    links:
+      - science_db_psql_db
+
+  science_db_psql_db:
+    build: 
+      context: .
+      dockerfile: science_db_psql_db_Dockerfile.txt
+    volumes:
+      - science_db_data:/var/lib/postgresql/data
+
+volumes:
+  science_db_data: {}

@@ -1,0 +1,17 @@
+version: "3.2"
+
+services:
+  science_db_psql:
+    build:
+      context: .
+      dockerfile: science_db_psql.txt
+    links:
+      - postgres
+
+  postgres:
+    image: 'science_db_postgres:latest'
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data: {}
