@@ -1,0 +1,34 @@
+version: "3.2"
+
+services:
+  science_db_backend:
+    image: 'science_db_backend:latest'
+    links:
+      - postgres
+    environment:
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - C:\Users\a.hallab\projects\ScienceDbBackend:/usr/src/app
+    command: 'npm start'
+
+  science_db_gui:
+    image: 'science_db_gui:latest'
+    links:
+      - science_db_backend
+    environment:
+      PORT: 3333
+    ports:
+      - "3333:3333"
+    volumes:
+      - C:\Users\a.hallab\projects\ScienceDbGui:/usr/src/app
+    command: 'npm run dev'
+
+  postgres:
+    image: 'science_db_postgres:latest'
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data: {}
