@@ -9,7 +9,9 @@ services:
       - postgres
 
   postgres:
-    image: 'science_db_postgres:latest'
+    build:
+      context: ../ScienceDbBackend/
+      dockerfile: postgres_db.txt
     volumes:
       - data:/var/lib/postgresql/data
 
