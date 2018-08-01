@@ -1,0 +1,29 @@
+logLevel = "DEBUG"
+defaultEntryPoints = ["http", "https"]
+
+# Connection to docker host system (docker.sock)
+[docker]
+domain = "docker.localhost"
+watch = true
+# This will hide all docker containers that don't have explicitly
+# set label to "enable"
+exposedbydefault = false
+
+#Force HTTPS
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+# Let's encrypt configuration
+[acme]
+  email="noc@intertech.de"
+  storage="/etc/traefik/acme/acme.json"
+  entryPoint="https"
+  acmeLogging=true
+  onDemand=true
+  OnHostRule=true
+  [acme.httpChallenge]
+    entryPoint = "http"

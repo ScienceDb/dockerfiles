@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  proxy:
+    image: traefik:latest
+    command: --logLevel=DEBUG
+    networks:
+      - reverseproxy
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik.toml:/etc/traefik/traefik.toml
+      - TraefikAcme:/etc/traefik/acme
+    restart: unless-stopped
+
+networks:
+  reverseproxy:
+    driver: bridge
+
+volumes:
+  TraefikAcme:

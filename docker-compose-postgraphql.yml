@@ -13,8 +13,6 @@ services:
       PGPORT: 5432
     links:
       - postgres
-    networks:
-      - reverseproxy
 
   postgres:
     image: 'science_db_postgres:latest'
@@ -23,6 +21,3 @@ services:
 
 volumes:
   data: 
-networks:
-  reverseproxy:
-    external: true
