@@ -2,7 +2,9 @@ version: "3.2"
 
 services:
   science_db_backend:
-    image: 'science_db_backend:latest'
+    build:
+      context: ../ScienceDbBackend/
+      dockerfile: Dockerfile
     environment:
       PORT: 3000
     ports:
@@ -22,7 +24,9 @@ services:
       - backend
 
   science_db_gui:
-    image: 'science_db_gui:latest'
+    build:
+      context: ../ScienceDbGui/
+      dockerfile: Dockerfile
     environment:
       PORT: 3333
     ports:
@@ -43,7 +47,7 @@ services:
       - backend
 
   postgraphql:
-    image: postgraphql/postgraphql:latest
+    image: postgraphql/postgraphql:v3
     #    ports:
     #      - "5000:5000"
     environment:
@@ -64,7 +68,9 @@ services:
       - backend
 
   postgres:
-    image: 'science_db_postgres:latest'
+    build:
+      context: ../ScienceDbBackend/
+      dockerfile: postgres_db.txt
     volumes:
       - data:/var/lib/postgresql/data
     networks:
