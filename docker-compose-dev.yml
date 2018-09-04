@@ -1,6 +1,15 @@
 version: "3.2"
 
 services:
+  postgres:
+    build:
+      context: ../ScienceDbBackend/
+      dockerfile: postgres_db.txt
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - backend
+
   science_db_backend:
     build:
       context: ../ScienceDbBackend/
@@ -65,15 +74,6 @@ services:
       traefik.port: "5000"
     networks:
       - reverseproxy
-      - backend
-
-  postgres:
-    build:
-      context: ../ScienceDbBackend/
-      dockerfile: postgres_db.txt
-    volumes:
-      - data:/var/lib/postgresql/data
-    networks:
       - backend
 
 volumes:
