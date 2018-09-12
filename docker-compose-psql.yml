@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: science_db_psql.txt
-    links:
-      - postgres
+    networks:
+      - backend
 
   postgres:
     build:
@@ -14,6 +14,8 @@ services:
       dockerfile: postgres_db.txt
     volumes:
       - data:/var/lib/postgresql/data
+    networks:
+      - backend
 
 volumes:
   data: {}

@@ -10,24 +10,30 @@ services:
     networks:
       - backend
 
+#  science_db_psql:
+#    build:
+#      context: .
+#      dockerfile: science_db_psql.txt
+#    networks:
+#      - backend
+
   science_db_backend:
     build:
       context: ../ScienceDbBackend/
       dockerfile: Dockerfile
     environment:
       PORT: 3000
-    ports:
-      - "3000:3000"
     volumes:
       - /home/hallab/projects/ReconstructDb/ScienceDbBackend:/usr/src/app
     command: 'npm start'
-    #labels:
-    #  traefik.enable: "true"
-    #  traefik.backend: "science_db_backend"
-    #  traefik.frontend.rule: "Host:vmd17974.hallab.de,vmd17974.contabo.host;PathPrefix:/reconstructdb_backend"
-    #  traefik.frontend.auth.basic: "testuser:$$apr1$$oQPKJJuG$$GLUGkFH1WkLN.D68SoXJQ."
-    #  traefik.docker.network: "reverseproxy"
-    #  traefik.port: "3000"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "science_db_backend"
+      #traefik.frontend.rule: "Host:v-10292.cloud.intertech.de,vmd17974.contabo.host;PathPrefix:/api"
+      traefik.frontend.rule: "Host:api.reconstructdb.org"
+      #traefik.frontend.auth.basic: 'testuser:$$apr1$$QBCuO60R$$pJIFSe2x8L/cTbOBOvoOt1'
+      traefik.docker.network: "reverseproxy"
+      traefik.port: "3000"
     networks:
       - reverseproxy
       - backend
@@ -38,27 +44,23 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: 3333
-    ports:
-      - "3333:3333"
     volumes:
       - /home/hallab/projects/ReconstructDb/ScienceDbGui:/usr/src/app
     command: "npm run dev"
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.backend: "science_db_gui"
-    #   traefik.frontend.rule: "Host:vmd17974.hallab.de,vmd17974.contabo.host"
-    #   #traefik.frontend.rule: "Host:vmd17974.contabo.host;PathPrefix:/science_db_gui"
-    #   traefik.frontend.auth.basic: "testuser:$$apr1$$oQPKJJuG$$GLUGkFH1WkLN.D68SoXJQ."
-    #   traefik.docker.network: "reverseproxy"
-    #   traefik.port: "3333"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "science_db_gui"
+      #traefik.frontend.rule: "Host:vmd17974.hallab.de,vmd17974.contabo.host"
+      traefik.frontend.rule: "Host:spa.reconstructdb.org"
+      #traefik.frontend.auth.basic: 'testuser:$$apr1$$QBCuO60R$$pJIFSe2x8L/cTbOBOvoOt1'
+      traefik.docker.network: "reverseproxy"
+      traefik.port: "3333"
     networks:
       - reverseproxy
       - backend
 
   postgraphql:
     image: postgraphql/postgraphql:v3
-    #    ports:
-    #      - "5000:5000"
     environment:
       PGUSER: kodiaq
       PGPASSWORD: kodiaq
@@ -68,17 +70,38 @@ services:
     labels:
       traefik.enable: "true"
       traefik.backend: "postgraphql"
-      traefik.frontend.rule: "Host:vmd17974.hallab.de,vmd17974.contabo.host;PathPrefix:/reconstructdb_graphql"
-      traefik.frontend.auth.basic: "testuser:$$apr1$$oQPKJJuG$$GLUGkFH1WkLN.D68SoXJQ."
+      #traefik.frontend.rule: "Host:v-10292.cloud.intertech.de,vmd17974.contabo.host;PathPrefix:/graphql"
+      traefik.frontend.rule: "Host:graphql.reconstructdb.org"
+      traefik.frontend.auth.basic: 'testuser:$$apr1$$QBCuO60R$$pJIFSe2x8L/cTbOBOvoOt1'
       traefik.docker.network: "reverseproxy"
       traefik.port: "5000"
     networks:
       - reverseproxy
       - backend
 
+  science_db_shiny:
+    build:
+      context: ../ScienceDbBackend/
+      dockerfile: Dockerfile.shiny
+    environment:
+      PORT: 3838
+    volumes:
+      - /home/hallab/projects/ReconstructDb/ScienceDbBackend/shiny-server:/srv/shiny-server
+    command: 'npm start'
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "science_db_shiny"
+      #traefik.frontend.rule: "Host:v-10292.cloud.intertech.de,vmd17974.contabo.host;PathPrefix:/api"
+      traefik.frontend.rule: "Host:api.reconstructdb.org"
+      #traefik.frontend.auth.basic: 'testuser:$$apr1$$QBCuO60R$$pJIFSe2x8L/cTbOBOvoOt1'
+      traefik.docker.network: "reverseproxy"
+      traefik.port: "3838"
+    networks:
+      - reverseproxy
+
 volumes:
   data: 
 networks:
   reverseproxy:
-  # external: true
+    external: true
   backend:
